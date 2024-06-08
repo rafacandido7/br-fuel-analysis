@@ -1,0 +1,4 @@
+python-dotenv
+pyspark
+numpy
+boto3

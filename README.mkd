@@ -1,0 +1,151 @@
+# Análise sobre os Preços dos Combustíveis no Brasil
+
+Aluno: Rafael Pereira Cândido
+
+Matrícula: 2221134
+
+Curso: Ciência da Computação
+
+Esse trabalho tem o propósito de analizar os preços dos combustíveis no Brasil do período de 2003 até 2023.
+
+Este projeto tem como objetivo a análise dimensional e a criação de um banco de dados para armazenar e analisar dados de preços coletados de diversas revendas em diferentes municípios.
+
+## Tabela de Conteúdos
+
+- [Descrição do Projeto](#descrição-do-projeto)
+- [Modelagem Dimensional](#modelagem-dimensional)
+  - [Tabelas de Dimensões](#tabelas-de-dimensões)
+  - [Tabela de Fatos](#tabela-de-fatos)
+- [Diagrama ER](#diagrama-er)
+- [Como Executar](#como-executar)
+
+## Descrição do Projeto
+
+Este projeto envolve a criação de um banco de dados baseado em um modelo dimensional para armazenar dados de coleta de preços. O objetivo é organizar os dados de maneira que facilite a análise e a geração de relatórios.
+
+### Modelagem Dimensional
+
+- **Dimensão Tempo**
+  - ID_Tempo (Primary Key)
+  - Data_Coleta
+  - Dia
+  - Mes
+  - Ano
+  - Dia_Semana int
+
+- **Dimensão Localização**
+  - Localizacao_ID (Primary Key)
+  - Regiao_Sigla
+  - Estado_Sigla
+  - Municipio
+  - Bairro
+  - CEP
+  - Localizacao_Geografica_ID (Foreign Key)
+
+- **Dimensão Localização Geográfica**
+  - Localizacao_Geografica_ID (Primary Key)
+  - Latitude
+  - Longitude
+
+- **Dimensão Produto**
+  - Produto_ID (Primary Key)
+  - Produto
+  - Bandeira
+
+- **Dimensão Revenda**
+  - Revenda_ID (Primary Key)
+  - CNPJ_Revenda
+  - Nome_Revenda
+
+- **Dimensão Endereço**
+  - Endereco_ID (Primary Key)
+  - Nome_Rua
+  - Numero_Rua
+  - Complemento
+
+### Tabela de Fatos
+
+- **Fato Venda**
+  - Venda_ID (Primary Key)
+  - Tempo_ID (Foreign Key)
+  - Localizacao_ID (Foreign Key)
+  - Produto_ID (Foreign Key)
+  - Revenda_ID (Foreign Key)
+  - Endereco_ID (Foreign Key)
+  - Valor_Venda
+  - Valor_Compra
+
+
+## Diagrama ER
+
+```mermaid
+erDiagram
+    DIM_Tempo {
+        Tempo_ID UUID PK
+        Data_Coleta date
+        Dia int
+        Mes int
+        Ano int
+        Dia_Semana int
+    }
+    DIM_Localizacao {
+        Localizacao_ID UUID PK
+        Regiao_Sigla varchar
+        Estado_Sigla varchar
+        Municipio varchar
+        Bairro varchar
+        CEP varchar
+        Localizacao_Geografica_ID UUID FK
+    }
+    DIM_Localizacao_Geografica {
+        Localizacao_Geografica_ID UUID PK
+        Latitude decimal
+        Longitude decimal
+    }
+    DIM_Produto {
+        Produto_ID UUID PK
+        Produto varchar
+        Bandeira varchar
+    }
+    DIM_Revenda {
+        Revenda_ID UUID PK
+        CNPJ_Revenda varchar
+        Nome_Revenda varchar
+    }
+    DIM_Endereco {
+        Endereco_ID UUID PK
+        Nome_Rua varchar
+        Numero_Rua varchar
+        Complemento varchar
+    }
+    FATO_Venda {
+        Venda_ID UUID PK
+        Tempo_ID UUID FK
+        Localizacao_ID UUID FK
+        Produto_ID UUID FK
+        Revenda_ID UUID FK
+        Endereco_ID UUID FK
+        Valor_Venda decimal
+        Valor_Compra decimal
+    }
+
+    DIM_Tempo ||--|| FATO_Venda : Tempo_ID
+    DIM_Localizacao ||--|{ FATO_Venda : Localizacao_ID
+    DIM_Localizacao_Geografica ||--|| DIM_Localizacao : Localizacao_Geografica_ID
+    DIM_Produto ||--|| FATO_Venda : Produto_ID
+    DIM_Revenda ||--|| FATO_Venda : Revenda_ID
+    DIM_Endereco ||--|| FATO_Venda : Endereco_ID
+```
+
+## Como executar
+
+
+## Andamento Atual
+
+Este README fornece uma visão geral do projeto, detalhando a modelagem dimensional, incluindo o diagrama ER, e os passos do processo ETL.
+
+## Possíveis Pontos de Melhora:
+[ ] - Integração com o Minio.
+[ ] - Verificar possibilidade de não normalizar tanto a questão geográfica.
+[ ] - Encontrar Latitude e Longitude das linhas da colunas para utilização da bilbioteca Folium.
+[ ] - Utilizar a Folium para análises espaciais.
