@@ -1,4 +1,3 @@
--- Criação da tabela DIM_Tempo
 CREATE TABLE DIM_Tempo (
     Tempo_ID UUID PRIMARY KEY,
     Data_Coleta DATE,

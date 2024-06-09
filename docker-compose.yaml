@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 
 services:
   spark-master:
@@ -7,6 +7,8 @@ services:
     ports:
       - "9090:8080"
       - "7077:7077"
+    volumes:
+      - ./jars:/opt/spark/jars
     networks:
       - intranet
 
@@ -20,6 +22,8 @@ services:
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 1g
       SPARK_MASTER_URL: spark://spark-master:7077
+    volumes:
+      - ./jars:/opt/spark/jars
     networks:
       - intranet
 
@@ -33,15 +37,17 @@ services:
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 1g
       SPARK_MASTER_URL: spark://spark-master:7077
+    volumes:
+      - ./jars:/opt/spark/jars
     networks:
       - intranet
 
-  postgresql:
+  db:
     image: postgres:latest
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydatabase
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: fuel_analysis
     ports:
       - "5432:5432"
     networks:
@@ -77,3 +83,6 @@ services:
 networks:
   intranet:
     driver: bridge
+
+volumes:
+  minio-data:

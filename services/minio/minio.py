@@ -14,5 +14,23 @@ s3 = boto3.client(
     region_name=os.getenv('AWS_REGION')
 )
 
-def send_file_to_minio(file_path, bucket_name, object_name):
-    s3.upload_file(file_path, bucket_name, object_name)
+bucket_name = os.getenv('AWS_BUCKET_NAME')
+
+def save_raw_data(file_paths):
+    for file_path in file_paths:
+        object_name = os.path.basename(file_path)
+        print(object_name)
+        # send_file_to_minio(file_path, object_name)
+
+def send_file_to_minio(file_path, object_name):
+    s3.upload_file(file_path, object_name)
+
+# def file_exists(object_name):
+#     try:
+#         s3.head_object(Bucket=bucket_name, Key=object_name)
+#         return True
+#     except Error as e:
+#         if e.response['Error']['Code'] == '404':
+#             return False
+#         else:
+#             raise e

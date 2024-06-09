@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Iniciando Ambiente..."
-docker-compose up -d
+docker-compose -d fuel-analysis up -d
 
 echo "Montando containers..."
 
