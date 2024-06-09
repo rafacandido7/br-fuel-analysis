@@ -30,8 +30,6 @@ def create_bucket_if_not_exists(bucket_name):
     if not bucket_exists(bucket_name):
         s3.create_bucket(Bucket=bucket_name)
         print("Created bucket:", bucket_name)
-    else:
-        print("Bucket already exists:", bucket_name)
 
 def save_raw_data(file_paths):
     create_bucket_if_not_exists(MINIO_BUCKET_NAME)
