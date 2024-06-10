@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   spark-master:
     image: bitnami/spark:latest
@@ -17,8 +19,8 @@ services:
       - spark-master
     environment:
       SPARK_MODE: worker
-      SPARK_WORKER_CORES: ${SPARK_WORKER_CORES}
-      SPARK_WORKER_MEMORY: ${SPARK_WORKER_MEMORY}
+      SPARK_WORKER_CORES: 2
+      SPARK_WORKER_MEMORY: 1g
       SPARK_MASTER_URL: spark://spark-master:7077
     volumes:
       - ./jars:/opt/spark/jars
@@ -32,8 +34,8 @@ services:
       - spark-master
     environment:
       SPARK_MODE: worker
-      SPARK_WORKER_CORES: ${SPARK_WORKER_CORES}
-      SPARK_WORKER_MEMORY: ${SPARK_WORKER_MEMORY}
+      SPARK_WORKER_CORES: 2
+      SPARK_WORKER_MEMORY: 1g
       SPARK_MASTER_URL: spark://spark-master:7077
     volumes:
       - ./jars:/opt/spark/jars
@@ -43,11 +45,11 @@ services:
   db:
     image: postgres:latest
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: fuel_analysis
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "5432:5432"
     networks:
       - intranet
 
@@ -70,8 +72,8 @@ services:
       - "9000:9000"
       - "9001:9001"
     environment:
-      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY_ID}
-      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_ACCESS_KEY}
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
     volumes:
       - minio-data:/data
     command: server /data --console-address ":9001"

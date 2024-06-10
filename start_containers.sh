@@ -1,7 +1,11 @@
 #!/bin/bash
 
 echo "Iniciando Ambiente..."
-docker-compose -d fuel-analysis up -d
+
+# Tkinter instalation
+sudo apt-get install python3-tk
+
+docker-compose -p fuel-analysis up -d
 
 echo "Montando containers..."
 
