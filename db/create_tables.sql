@@ -26,7 +26,6 @@ CREATE TABLE dim_localizacao (
 CREATE TABLE dim_produto (
     produto_id UUID PRIMARY KEY,
     produto VARCHAR,
-    bandeira VARCHAR
 );
 
 CREATE TABLE dim_revenda (

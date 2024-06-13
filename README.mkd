@@ -105,7 +105,6 @@ erDiagram
     DIM_Produto {
         Produto_ID UUID PK
         Produto varchar
-        Bandeira varchar
     }
     DIM_Revenda {
         Revenda_ID UUID PK
@@ -149,3 +148,51 @@ Este README fornece uma visão geral do projeto, detalhando a modelagem dimensio
 [ ] - Verificar possibilidade de não normalizar tanto a questão geográfica.
 [ ] - Encontrar Latitude e Longitude das linhas da colunas para utilização da bilbioteca Folium.
 [ ] - Utilizar a Folium para análises espaciais.
+
+
+## Parte Analítica
+1. Análise de Tendência de Preços ao Longo do Tempo
+Pergunta: Como os preços dos combustíveis variaram ao longo do tempo?
+
+Gráfico Sugerido: Linha do Tempo
+
+Eixo X: Data da Coleta
+Eixo Y: Valor de Venda
+Séries: Diferentes tipos de combustíveis (Gasolina, Etanol, Diesel)
+2. Análise de Variação Regional de Preços
+Pergunta: Como os preços dos combustíveis variam entre diferentes regiões e estados?
+
+Gráfico Sugerido: Mapa de Calor ou Mapa Geográfico
+
+Eixo X: Estados ou Regiões
+Eixo Y: Valor de Venda Médio
+Séries: Diferentes tipos de combustíveis
+3. Análise de Distribuição de Preços
+Pergunta: Qual é a distribuição dos preços dos combustíveis?
+
+Gráfico Sugerido: Histograma ou Box Plot
+
+Eixo X: Faixas de Preço
+Eixo Y: Frequência ou Densidade
+4. Comparação de Preços entre Bandeiras de Revenda
+Pergunta: Há diferenças significativas nos preços dos combustíveis entre diferentes bandeiras de revenda?
+
+Gráfico Sugerido: Gráfico de Barras ou Box Plot
+
+Eixo X: Bandeira de Revenda
+Eixo Y: Valor de Venda
+5. Análise de Correlação entre Preço de Compra e Preço de Venda
+Pergunta: Qual é a correlação entre o preço de compra e o preço de venda dos combustíveis?
+
+Gráfico Sugerido: Gráfico de Dispersão
+
+Eixo X: Valor de Compra
+Eixo Y: Valor de Venda
+6. Análise Sazonal
+Pergunta: Existem padrões sazonais nos preços dos combustíveis?
+
+Gráfico Sugerido: Linha do Tempo com Anotações Sazonais
+
+Eixo X: Data da Coleta (agregada por mês ou trimestre)
+Eixo Y: Valor de Venda Médio
+Séries: Diferentes tipos de combustíveis
