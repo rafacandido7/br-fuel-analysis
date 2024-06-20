@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit_mermaid as stmd
 
 from dashboard.pgs.geographic_analysis import geographic_analysis_page
-from dashboard.pgs.predictive_model import predictive_model_page
+from dashboard.pgs.correlation_analysis import correlation_analysis_page
 from dashboard.pgs.report import report_page
 from dashboard.pgs.temporal_analysis import temporal_analysis_page
 
@@ -122,7 +122,7 @@ page_names_to_funcs = {
     "Início": main_page,
     "Análise Temporal": temporal_analysis_page,
     "Análise Geográfica": geographic_analysis_page,
-    "Modelo Preditivo": predictive_model_page,
+    "Correlação com o Dolar": correlation_analysis_page,
     "Relatório": report_page,
 }
 
