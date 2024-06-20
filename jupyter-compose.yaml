@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: db-jupyter
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - ./docker-volumes/db-data:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d
+    networks:
+      - intranet
+
+  jupyter:
+    container_name: jupyter
+    build:
+      context: ./src/services/jupyter
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./src/notebooks:/home/jovyan/work
+      - ./csv-data:/home/jovyan/data
+    environment:
+      JUPYTER_ENABLE_LAB: "yes"
+    networks:
+      - intranet
+
+networks:
+  intranet:
+    driver: bridge

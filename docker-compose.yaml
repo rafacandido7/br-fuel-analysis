@@ -7,27 +7,32 @@ services:
       context: ./src/services/spark
       dockerfile: Dockerfile
     command: bin/spark-class org.apache.spark.deploy.master.Master
+    volumes:
+      - ./src:/spark-workspace
+      - ./ca-data:/ca-data
+      - ./dollar-data:/dollar-data
     ports:
       - "9090:8080"
       - "7077:7077"
+      - "8501:8501"
     networks:
       - intranet
 
-  spark-worker-1:
-    container_name: spark-worker-1
-    build:
-      context: ./src/services/spark
-      dockerfile: Dockerfile
-    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
-    depends_on:
-      - spark-master
-    environment:
-      SPARK_MODE: worker
-      SPARK_WORKER_CORES: ${SPARK_WORKER_CORES}
-      SPARK_WORKER_MEMORY: ${SPARK_WORKER_MEMORY}
-      SPARK_MASTER_URL: spark://spark-master:7077
-    networks:
-      - intranet
+  # spark-worker-1:
+  #   container_name: spark-worker-1
+  #   build:
+  #     context: ./src/services/spark
+  #     dockerfile: Dockerfile
+  #   command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+  #   depends_on:
+  #     - spark-master
+  #   environment:
+  #     SPARK_MODE: worker
+  #     SPARK_WORKER_CORES: ${SPARK_WORKER_CORES}
+  #     SPARK_WORKER_MEMORY: ${SPARK_WORKER_MEMORY}
+  #     SPARK_MASTER_URL: spark://spark-master:7077
+  #   networks:
+  #     - intranet
 
   db:
     container_name: db
@@ -41,21 +46,6 @@ services:
     volumes:
       - ./docker-volumes/db-data:/var/lib/postgresql/data
       - ./db:/docker-entrypoint-initdb.d
-    networks:
-      - intranet
-
-  jupyter:
-    container_name: jupyter
-    build:
-      context: ./src/services/jupyter
-      dockerfile: Dockerfile
-    ports:
-      - "8888:8888"
-    volumes:
-      - ./src/notebooks:/home/jovyan/work
-      - ./csv-data:/home/jovyan/data
-    environment:
-      JUPYTER_ENABLE_LAB: "yes"
     networks:
       - intranet
 

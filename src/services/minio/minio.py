@@ -11,7 +11,6 @@ MINIO_SECRET_ACCESS_KEY = os.getenv('MINIO_SECRET_ACCESS_KEY')
 MINIO_REGION = os.getenv('MINIO_REGION')
 MINIO_BUCKET_NAME = os.getenv('MINIO_BUCKET_NAME')
 
-
 s3 = boto3.client(
     's3',
     endpoint_url=MINIO_ENDPOINT,
@@ -33,8 +32,21 @@ def create_bucket_if_not_exists(bucket_name):
 
 def save_raw_data(file_paths):
     create_bucket_if_not_exists(MINIO_BUCKET_NAME)
-    
+
     for file_path in file_paths:
         object_name = file_path.split('/').pop()
-        print("Uploading", file_path, "as", object_name)
+        print(">>> Uploading", file_path, "as", object_name)
         s3.upload_file(file_path, MINIO_BUCKET_NAME, object_name)
+
+    print("[+] Files uploaded successfully")
+
+    return list_files_in_bucket(MINIO_BUCKET_NAME)
+
+
+def list_files_in_bucket(bucket_name):
+    objects = s3.list_objects_v2(Bucket=bucket_name)
+    files = [obj['Key'] for obj in objects.get('Contents', [])]
+
+    file_paths = [f"s3a://{MINIO_BUCKET_NAME}/{file}" for file in files]
+
+    return file_paths

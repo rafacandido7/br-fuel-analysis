@@ -1,25 +1,51 @@
 from services.minio.minio import save_raw_data
-from services.spark.spark import etl
-from utils.get_files_paths import select_files
+from services.spark.__main__ import SparkAnalysisService
+from rich.console import Console
+from rich.prompt import Prompt
+
+APP_NAME = "Spark Analysis"
+URL = "jdbc:postgresql://db:5432/fuel_analysis"
+DB_PROPERTIES = {
+    "user": "root",
+    "password": "root",
+    "driver": "org.postgresql.Driver"
+}
+
+console = Console()
 
 def main():
-    print("\033[1m\033[94m Load Data Service \n\033[0m")
 
-    # file_paths = select_files()
+    console.print("[bold blue]=== Spark Analysis Service ===[/bold blue]\n")
 
-    # if not file_paths:
-    #     print("Nenhum arquivo selecionado.")
-    #     return
+    while True:
+        try:
+            console.print("[bold blue]Escolha o tipo de dados:[/bold blue]")
+            console.print("[green]1. Dados dos Combustíveis[/green]")
+            console.print("[green]2. Dados da cotação do dólar[/green]\n")
 
-    # print(file_paths)
+            data_choice = Prompt.ask("[blue]Digite sua escolha[/blue]", choices=["1", "2"])
 
-    # save_raw_data(file_paths)
-   
-    etl(['/home/candido/prog/bi/br-fuel-analysis/csv-data/ca-2020-02.csv'])
+            spark_analysis_service = SparkAnalysisService(APP_NAME, URL, DB_PROPERTIES)
 
-    # Parse urls for spark job
+            if data_choice == '1':
+                input_paths = ['/ca-data/ca-2004-01.csv']
+                input_paths = Prompt.ask("[bold blue]Passe o caminho dos arquivos, ou diretório, dos Dados de Combustíveis separados por ','[/bold blue]").split(',')
+                input_paths = [path.strip() for path in input_paths]
+                console.print("[blue]Processando Dados dos Combustíveis...[/blue]")
+                spark_analysis_service.run_fuel_data(input_paths)
+                console.print("[bold blue]Dados dos Combustíveis processados com sucesso![/bold blue]")
+                break
 
-    # Run spark jobs
+            if data_choice == '2':
+                input_paths = Prompt.ask("[green]Passe o caminho dos arquivos, ou diretório, dos Dados da cotação do dólar separados por ','[/green]").split(',')
+                input_paths = [path.strip() for path in input_paths]
+                console.print("[green]Processando Dados da cotação do dólar...[/green]")
+                spark_analysis_service.run_dollar_data(input_paths)
+                break
+
+        except KeyboardInterrupt:
+            console.print("[bold red]Programa interrompido pelo usuário.[/bold red]")
+            return
 
 if __name__ == "__main__":
     main()

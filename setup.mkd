@@ -1,9 +1,0 @@
-instruções para preparar o ambiente
-``` bash
-chmod +x start_containers.sh
-./start_containers.sh
-python3 -m venv venv
-pip install -r requirements.txt
-```
-
-configurar Kernel do Jupyter

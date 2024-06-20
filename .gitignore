@@ -1,5 +1,6 @@
 reports
-data
+ca-data
+dollar-data
 venv
 .DS_Store
 .env
