@@ -2,21 +2,12 @@ import streamlit as st
 import pandas as pd
 import streamlit_mermaid as stmd
 
-from services.spark.__main__ import SparkAnalysisService
+from dashboard.pgs.geographic_analysis import geographic_analysis_page
+from dashboard.pgs.predictive_model import predictive_model_page
+from dashboard.pgs.report import report_page
+from dashboard.pgs.temporal_analysis import temporal_analysis_page
 
-APP_NAME = "Spark Analysis"
-URL = "jdbc:postgresql://db:5432/fuel_analysis"
-DB_PROPERTIES = {
-    "user": "root",
-    "password": "root",
-    "driver": "org.postgresql.Driver"
-}
-
-def main():
-    spark_analysis_service = SparkAnalysisService(APP_NAME, URL, DB_PROPERTIES)
-
-    st.sidebar.title("Perguntas Analíticas")
-
+def main_page():
     st.title("Análise de Dados sobre Preços de Combustíveis no Brasil")
     st.markdown("## Descrição Geral do Projeto")
     st.markdown("""
@@ -122,19 +113,22 @@ def main():
     DIM_Revenda ||--|| FATO_Venda : Revenda_ID
     DIM_Endereco ||--|| FATO_Venda : Endereco_ID
     """)
+
     st.header("Amostra dos Dados (Não tratados)")
-    data = pd.read_csv('dashboard/samples_data/test.csv', sep=";")
+    data = pd.read_csv('dashboard/samples_data/sample.csv', sep=";")
     st.dataframe(data)
 
-    st.header("PRODUTOS DO PYSPARKK")
-    prod = spark_analysis_service.load_dim_table('dim_produto')
+page_names_to_funcs = {
+    "Início": main_page,
+    "Análise Temporal": temporal_analysis_page,
+    "Análise Geográfica": geographic_analysis_page,
+    "Modelo Preditivo": predictive_model_page,
+    "Relatório": report_page,
+}
 
-    st.dataframe(prod)
-
-
-    st.header("Navegação")
-    st.markdown("[Análise Temporal](exploratory_analysis.py)")
-    st.markdown("[Modelo Preditivo](predictive_model.py)")
+def run_app():
+    selected_page = st.sidebar.selectbox("Selecione uma página", page_names_to_funcs.keys())
+    page_names_to_funcs[selected_page]()
 
 if __name__ == "__main__":
-    main()
+    run_app()

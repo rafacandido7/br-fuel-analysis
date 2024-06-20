@@ -1,17 +1,15 @@
 from rich.console import Console
 from rich.logging import RichHandler
-from services.minio.minio import save_raw_data
 from pyspark.sql import SparkSession
 from pyspark.sql.types import DoubleType, StringType
 from pyspark.sql import functions as f
 from db.tables import Tables
 import logging
 
-# Configuração básica do logging com rich
 console = Console()
 logging.basicConfig(
     level=logging.INFO,
-    format="%(message)s",  # Remove prefixos padrão do logging
+    format="%(message)s",
     datefmt="[%X]",
     handlers=[RichHandler(console=console, rich_tracebacks=True, markup=True)]
 )
