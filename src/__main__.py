@@ -1,4 +1,3 @@
-from services.minio.minio import save_raw_data
 from services.spark.__main__ import SparkAnalysisService
 from rich.console import Console
 from rich.prompt import Prompt
@@ -38,11 +37,9 @@ def main():
             spark_analysis_service = SparkAnalysisService(APP_NAME, URL, DB_PROPERTIES)
 
             if data_choice == '1':
-                input_paths = ['/ca-data/ca-2004-01.csv']
                 input_paths = Prompt.ask("[bold blue]Passe o caminho dos arquivos, ou diretório, dos Dados de Combustíveis separados por ','[/bold blue]").split(',')
                 input_paths = [path.strip() for path in input_paths]
                 console.print("[blue]Processando Dados dos Combustíveis...[/blue]")
-                save_raw_data(input_paths)
                 spark_analysis_service.run_fuel_data(input_paths)
                 console.print("[bold blue]Dados dos Combustíveis processados com sucesso![/bold blue]")
                 break
@@ -51,7 +48,6 @@ def main():
                 input_paths = Prompt.ask("[green]Passe o caminho dos arquivos, ou diretório, dos Dados da cotação do dólar separados por ','[/green]").split(',')
                 input_paths = [path.strip() for path in input_paths]
                 console.print("[green]Processando Dados da cotação do dólar...[/green]")
-                save_raw_data(input_paths)
                 spark_analysis_service.run_dollar_data(input_paths)
                 break
 

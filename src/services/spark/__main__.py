@@ -1,3 +1,4 @@
+from services.minio.minio import save_raw_data
 from rich.console import Console
 from rich.logging import RichHandler
 from pyspark.sql import SparkSession
@@ -274,6 +275,27 @@ class SparkAnalysisService:
                       )
         logger.info("[bold green]Tabela de fatos de vendas criada.[/bold green]")
         return fato_venda
+    
+    def validate_fuel_data(self, df, expected_headers):
+        """
+        Valida os dados de combustível.
+
+        Args:
+            paths: Caminho dos arquivos CSVs.
+        """
+        logger.info("[bold blue]Iniciando validação dos dados de combustível.[/bold blue]")
+
+        actual_headers = df.columns
+
+        if set(expected_headers) == set(actual_headers):
+            logger.info("[bold green]Cabeçalhos validados com sucesso.[/bold green]")
+        else:
+            missing_headers = set(expected_headers) - set(actual_headers)
+            extra_headers = set(actual_headers) - set(expected_headers)
+            error_message = f"[bold red]Erro na validação dos cabeçalhos. Faltando: {missing_headers}, Extras: {extra_headers}[/bold red]"
+            logger.error(error_message)
+            raise ValueError(error_message)
+
 
     def run_fuel_data(self, paths):
         """
@@ -284,6 +306,18 @@ class SparkAnalysisService:
         """
         logger.info("[bold blue]Iniciando processo ETL dos dados de combustível.[/bold blue]")
         df = self.extract_data(paths)
+        
+        expected_headers = [
+            "Regiao - Sigla", "Estado - Sigla", "Municipio", "Revenda",
+            "CNPJ da Revenda", "Nome da Rua", "Numero Rua", "Complemento",
+            "Bairro", "Cep", "Produto", "Data da Coleta", "Valor de Venda",
+            "Valor de Compra", "Unidade de Medida", "Bandeira"
+        ]
+        
+        self.validate_fuel_data(df, expected_headers)
+        
+        save_raw_data(paths)
+        
         df = self.transform_ca_data(df)
 
         dim_tempo = self.create_dim_tempo(df)
@@ -308,12 +342,18 @@ class SparkAnalysisService:
         self.load_data_to_db(fato_venda, Tables.FATO_VENDA)
         logger.info("[bold blue]Processo ETL dos dados de combustível finalizado.[/bold blue]")
 
-    def test(self):
-        return print(self.load_from_db_table(Tables.DOLLAR_INFO).count())
-
     def run_dollar_data(self, paths):
         logger.info("[bold blue]Processando dados da cotação do dólar.[/bold blue]")
         df = self.extract_data(paths)
+        
+        expected_headers = [
+            "data", "valor"
+        ]
+        
+        self.validate_fuel_data(df, expected_headers)
+        
+        save_raw_data(paths)
+        
         cleaned_df = self.transform_dollar_data(df)
 
         self.load_data_to_db(cleaned_df, Tables.DOLLAR_INFO)
